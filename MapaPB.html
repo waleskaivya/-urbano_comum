@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Urbano Comum — Mapeamento Comunitário</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="institutional-logos">
+  <a href="https://www.utfpr.edu.br/campus/patobranco" target="_blank" rel="noopener">
+    <img src="UTFPRpreto.png" alt="Logo UTFPR">
+  </a>
+  <a href="https://www.utfpr.edu.br/cursos/programas-de-pos-graduacao/ppgdr-pb" target="_blank" rel="noopener">
+    <img src="ppdgr.png" alt="Logo PPGDR">
+  </a>
+  <a href="https://www.fappr.pr.gov.br/Pagina/Fundacao-Araucaria" target="_blank" rel="noopener">
+    <img src="fundaraucaria.png" alt="Logo Fundação Araucária">
+  </a>
+</div>
+
+<footer>
+  <p>Pesquisa de Mestrado | UTFPR - Universidade Tecnológica Federal do Paraná | Campus de Pato Branco | PPGDR - Programa de Pós-Graduação em Desenvolvimento Regional | Bolsista da Fundação Araucária.</p>
+</footer>
+
+<header>
+  <h1>URBANO COMUM</h1>
+  <span>Mapeamento Comunitário · Pato Branco, PR</span>
+</header>
+
+<div class="toolbar">
+  <label>Filtrar:</label>
+  <button class="cat-btn active" data-cat="todos">Todos</button>
+  <button class="cat-btn" data-cat="alagamento">Alagamento</button>
+  <button class="cat-btn" data-cat="pavimentacao">Pavimentação</button>
+  <button class="cat-btn" data-cat="calcada">Calçada</button>
+  <button class="cat-btn" data-cat="iluminacao">Iluminação</button>
+  <button class="cat-btn" data-cat="acessibilidade">Acessibilidade</button>
+  <button class="cat-btn" data-cat="lixo">Lixo</button>
+  <button class="cat-btn" data-cat="sinalizacao">Sinalização</button>
+  <button class="cat-btn" data-cat="meio_ambiente">Meio Ambiente</button>
+</div>
+
+<div class="hint" id="hint-box">
+  <span>Clique em qualquer ponto do mapa para registrar um problema urbano.</span>
+  <button id="close-hint">×</button>
+</div>
+
+<div style="position:relative;">
+  <div id="map"></div>
+  <div class="legend" id="map-legend">
+    <strong>Categorias</strong>
+  </div>
+</div>
+
+<div class="counter" id="counter">0 registros no mapa</div>
+
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <h3>Registrar problema</h3>
+    <label>Categoria</label>
+    <select id="cat-select">
+      <option value="">Selecione a categoria...</option>
+      <option value="alagamento">Alagamento</option>
+      <option value="pavimentacao">Pavimentação</option>
+      <option value="calcada">Calçada</option>
+      <option value="iluminacao">Iluminação</option>
+      <option value="acessibilidade">Acessibilidade</option>
+      <option value="lixo">Lixo</option>
+      <option value="sinalizacao">Sinalização</option>
+      <option value="meio_ambiente">Meio Ambiente</option>
+    </select>
+    <label>Descrição (opcional)</label>
+    <textarea id="desc-input" placeholder="Descreva o problema..."></textarea>
+    <div class="modal-btns">
+      <button class="btn-cancel" id="btn-cancel">Cancelar</button>
+      <button class="btn-save" id="btn-save">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDEM CORRETA: Leaflet → Supabase → seu script.js -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

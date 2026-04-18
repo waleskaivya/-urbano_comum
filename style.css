@@ -1,0 +1,161 @@
+/* --- RESET E ESTRUTURA --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
+  font-family: system-ui, sans-serif; 
+  background: #f5f5f0; 
+  color: #1a1a1a; 
+  display: flex; 
+  flex-direction: column; 
+  min-height: 100vh; 
+  overflow-x: hidden;
+}
+
+/* --- CABEÇALHO INSTITUCIONAL (LOGO-MARCAS) --- */
+.institutional-logos {
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  padding: 0;
+}
+
+.institutional-logos img {
+  max-height: 45px;
+  width: auto;
+  filter: grayscale(100%);
+  opacity: 1;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  cursor: pointer;
+}
+
+.institutional-logos img:hover {
+  transform: scale(1.15);
+  filter: grayscale(0%);
+}
+
+img[src="ppdgr.png"] {
+  max-height: 80px;
+  transform: translateY(1px);
+}
+
+img[src="ppdgr.png"]:hover {
+  transform: translateY(1px) scale(1.15);
+}
+
+/* --- HEADER DO MAPA --- */
+header { 
+  background: white; 
+  border-bottom: 1px solid #e0e0d8; 
+  padding: 8px 20px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+}
+header h1 { font-size: 22px; font-weight: 400; color: #1D9E75; font-family: 'Bebas Neue', sans-serif; letter-spacing: 3px; }
+
+header span { font-size: 11px; color: #888; }
+
+/* --- FILTROS E BOTÕES --- */
+.toolbar { 
+  background: white; 
+  border-bottom: 1px solid #e0e0d8; 
+  padding: 8px 20px; 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  flex-wrap: wrap; 
+}
+.cat-btn { font-size: 11px; padding: 4px 12px; border-radius: 20px; border: 1px solid #ccc; background: white; cursor: pointer; transition: 0.2s; }
+.cat-btn.active { background: #1D9E75; border-color: #1D9E75; color: white; }
+
+/* --- HINT --- posição fixed para ficar FORA do contexto do mapa/Leaflet --- */
+.hint { 
+  background-color: rgba(255, 147, 147, 0.4); 
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  position: fixed;           /* fixed: relativo à janela, não ao mapa */
+  bottom: 60%;              /* flutua acima do rodapé */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9998;             /* abaixo do modal (9999) mas acima de tudo mais */
+  display: flex;
+  align-items: center;
+  gap: 15px; 
+  width: auto;
+  max-width: 90%;
+  color: #900c0c;
+  padding: 8px 15px 8px 20px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: 1px solid rgba(144, 12, 12, 0.1);
+  pointer-events: auto;
+}
+
+/* Botão X */
+#close-hint {
+  background: rgba(144, 12, 12, 0.1);
+  border: none;
+  color: #900c0c;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+  line-height: 1;
+}
+
+#close-hint:hover {
+  background: rgba(144, 12, 12, 0.3);
+}
+
+/* --- ÁREA DO MAPA --- */
+#map { 
+  width: 100%; 
+  flex-grow: 1; 
+  min-height: 400px;
+}
+
+/* --- RODAPÉ E LEGENDA --- */
+.counter { background: white; border-top: 1px solid #e0e0d8; padding: 6px 20px; font-size: 11px; color: #666; }
+footer { background: white; padding: 0px; text-align: center; font-size: 10px; color: #aaa; }
+
+.legend { 
+  position: absolute; 
+  bottom: 30px; 
+  right: 20px; 
+  z-index: 1000; 
+  background: white; 
+  padding: 12px; 
+  border-radius: 8px; 
+  border: 1px solid #ddd; 
+  font-size: 11px; 
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+}
+.leg-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.leg-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+/* --- MODAL --- */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.2); z-index: 9999; align-items: center; justify-content: center; }
+.modal-bg.open { display: flex; }
+.modal {
+  background: rgba(255, 255, 255, 0.50); 
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  border-radius: 12px;
+  padding: 25px;
+  width: 320px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.modal h3 { font-size: 16px; margin-bottom: 15px; color: #333; }
+.modal label { font-size: 12px; color: #666; display: block; margin-bottom: 5px; }
+.modal select, .modal textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; }
+.modal-btns { display: flex; gap: 10px; justify-content: flex-end; }
+.btn-save { background: #1D9E75; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btn-cancel { background: white; border: 1px solid #ccc; padding: 10px 20px; border-radius: 8px; cursor: pointer; color: #666; }
