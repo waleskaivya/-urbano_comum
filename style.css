@@ -161,16 +161,17 @@ header span { font-size: 11px; color: #888; }
   z-index: 9998;
   display: flex;
   align-items: center;
-  gap: 15px; 
+  gap: 12px; 
   width: auto;
-  max-width: 90%;
+  max-width: min(420px, 88vw);  /* limita em telas pequenas */
   color: #900c0c;
-  padding: 10px 15px 10px 20px;
+  padding: 10px 12px 10px 16px;
   font-size: 12px;
-  border-radius: 5px;
+  border-radius: 8px;
   border: 1px solid rgba(144, 12, 12, 0.1);
   pointer-events: auto;
-  white-space: nowrap;
+  white-space: normal;          /* permite quebra de linha */
+  word-break: break-word;
 }
 
 #close-hint {
@@ -180,15 +181,17 @@ header span { font-size: 11px; color: #888; }
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  width: 24px;
-  height: 24px;
-  border-radius: 10%;
+  min-width: 28px;
+  min-height: 28px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: 0.2s;
   line-height: 1;
-  flex-shrink: 0;
+  flex-shrink: 0;   /* nunca encolhe, sempre clicável */
 }
 
 #close-hint:hover { background: rgba(144, 12, 12, 0.3); }
@@ -253,12 +256,13 @@ footer {
 .modal-bg.open { display: flex; }
 
 .modal {
-  background: rgba(255, 255, 255, 0.55); 
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
+  background: rgba(255, 255, 255, 0.95); 
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   border-radius: 12px;
   padding: 25px;
   width: 340px;
+  max-width: 92vw;
   max-height: 85vh;
   overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
@@ -317,7 +321,6 @@ footer {
   color: #333;
 }
 
-/* Rodapé do modal de boas-vindas: checkbox + botão */
 .sobre-footer {
   display: flex;
   align-items: center;
@@ -326,6 +329,7 @@ footer {
   margin-top: 4px;
   border-top: 1px solid #eee;
   padding-top: 16px;
+  flex-wrap: wrap;
 }
 
 .nao-mostrar-label {
@@ -369,4 +373,25 @@ footer {
 
 .outro-input:focus {
   border-color: #4b23ff;
+}
+
+/* --- AJUSTES MOBILE --- */
+@media (max-width: 480px) {
+  .institutional-logos { gap: 20px; }
+  
+  .hint {
+    font-size: 11px;
+    padding: 10px 10px 10px 14px;
+    gap: 10px;
+  }
+
+  .legend {
+    bottom: 10px;
+    right: 10px;
+    padding: 8px;
+    font-size: 10px;
+  }
+
+  header { padding: 6px 12px; }
+  .toolbar { padding: 6px 12px; gap: 5px; }
 }
