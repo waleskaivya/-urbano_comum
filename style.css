@@ -53,7 +53,28 @@ header {
   align-items: center; 
   justify-content: space-between; 
 }
-header h1 { font-size: 22px; font-weight: 400; color: #1D9E75; font-family: 'Bebas Neue', sans-serif; letter-spacing: 3px; }
+.header-info {
+  display: flex;
+  justify-content: flex-end; /* Empurra tudo para a direita */
+  align-items: center;      /* Alinha verticalmente o texto e o ícone */
+  gap: 10px;                /* Espaço entre o texto e a engrenagem */
+}
+
+#titulo-urbano-comum {
+  font-size: 22px;
+  font-weight: 400;
+  color: #1D9E75;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 3px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  user-select: none;
+}
+
+#titulo-urbano-comum:hover {
+  opacity: 0.75;
+}
+
 header span { font-size: 11px; color: #888; }
 
 /* --- ÁREA DO ADMIN --- */
@@ -135,11 +156,11 @@ header span { font-size: 11px; color: #888; }
   gap: 15px; 
   width: auto;
   max-width: 90%;
-  color: #9b0000;
+  color: #900c0c;
   padding: 8px 15px 8px 20px;
   font-size: 12px;
   border-radius: 5px;
-  border: 1px solid rgba(199, 0, 0, 0.459);
+  border: 1px solid rgba(144, 12, 12, 0.1);
   pointer-events: auto;
 }
 
@@ -189,10 +210,21 @@ footer { background: white; padding: 0px; text-align: center; font-size: 10px; c
 .leg-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 
 /* --- MODAIS --- */
-.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.2); z-index: 9999; align-items: center; justify-content: center; }
+.modal-bg { 
+    display: none; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(161, 161, 161, 0.582); 
+    z-index: 9999; 
+    align-items: center; 
+    justify-content: center;
+    border-radius: 12px;
+
+}
 .modal-bg.open { display: flex; }
+
 .modal {
-  background: rgba(255, 255, 255, 0.5); 
+  background: rgba(255, 255, 255, 0.95); 
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 12px;
@@ -202,6 +234,61 @@ footer { background: white; padding: 0px; text-align: center; font-size: 10px; c
   overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
+
+/* --- MODAL SOBRE O PROJETO --- */
+.modal-sobre-conteudo {
+  width: 480px;
+  max-width: 92vw;
+  position: relative;
+  padding: 35px 30px 28px;
+}
+
+.modal-sobre-conteudo h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 18px;
+  line-height: 1.3;
+}
+
+.modal-sobre-conteudo p {
+  font-size: 13px;
+  color: #444;
+  line-height: 1.7;
+  margin-bottom: 12px;
+  text-align: justify;
+}
+
+.modal-sobre-conteudo p:last-child {
+  margin-bottom: 0;
+}
+
+.btn-fechar-sobre {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: rgba(0,0,0,0.06);
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #666;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+  line-height: 1;
+}
+
+.btn-fechar-sobre:hover {
+  background: rgba(0,0,0,0.12);
+  color: #333;
+}
+
+/* --- MODAL FORMULÁRIO --- */
 .modal h3 { font-size: 16px; margin-bottom: 15px; color: #333; }
 .modal label { font-size: 12px; color: #666; display: block; margin-bottom: 5px; }
 .modal select, .modal textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 13px; }

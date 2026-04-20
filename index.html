@@ -28,9 +28,11 @@
 </footer>
 
 <header>
-  <h1>URBANO COMUM</h1>
+  <h1 id="titulo-urbano-comum" title="Saiba mais sobre o projeto">URBANO COMUM</h1>
   <div id="admin-area">
-      <span>Mapeamento Comunitário · Pato Branco, PR</span>
+  <div class="header-info">
+  <span>Mapeamento Comunitário · Pato Branco, PR</span>
+  <i class="fas fa-cog"></i> </div>
     <button id="btn-admin-login" title="Área administrativa">⚙</button>
     <span id="admin-status" style="display:none;">
       <span id="admin-email-label"></span>
@@ -66,6 +68,18 @@
 
 <div class="counter" id="counter">0 registros no mapa</div>
 
+<!-- MODAL: Sobre o projeto -->
+<div class="modal-bg" id="modal-sobre">
+  <div class="modal modal-sobre-conteudo">
+    <button class="btn-fechar-sobre" id="btn-fechar-sobre">×</button>
+    <h2>Bem-vindo(a) ao <span style="color:#1D9E75;font-family:'Bebas Neue',sans-serif;letter-spacing:2px;">URBANO COMUM</span>!</h2>
+    <p>O projeto surge para dar voz às experiências cotidianas, transformando relatos individuais em dados coletivos. É a nossa ferramenta para identificar problemas compartilhados e buscar melhorias que beneficiem a todos, fortalecendo o cuidado com o espaço que chamamos de casa.</p>
+    <p>Este espaço é parte de uma pesquisa de Mestrado da UTFPR (Campus Pato Branco) do programa de Pós-graduação em Desenvolvimento Regional. Nosso objetivo é criar um canal intuitivo onde você pode sinalizar problemas urbanos e compartilhar sua vivência na cidade.</p>
+    <p><strong>Por que participar?</strong> Sua colaboração é totalmente anônima e fundamental para transformarmos dados em mobilização por melhorias. Mesmo que um problema já tenha sido marcado por outra pessoa, registre o seu relato! Quanto mais indicações um local recebe, maior se torna a evidência da urgência daquele problema.</p>
+    <p>Agradecemos imensamente sua contribuição. Sem você, esta pesquisa não seria possível!</p>
+  </div>
+</div>
+
 <!-- MODAL: Registrar problema -->
 <div class="modal-bg" id="modal">
   <div class="modal">
@@ -84,13 +98,12 @@
       <option value="meio_ambiente">Meio Ambiente</option>
     </select>
 
-    <!-- CAMPOS EXTRAS: só aparecem quando categoria = alagamento -->
     <div id="alagamento-fields" style="display:none;">
 
       <label>Quando os alagamentos costumam acontecer?</label>
       <select id="select-frequencia">
         <option value="">Selecione...</option>
-        <option value="Só em chuvas muito fortes">a) Em chuvas muito fortes</option>
+        <option value="Só em chuvas muito fortes">a) Só em chuvas muito fortes</option>
         <option value="Em qualquer chuva média">b) Em qualquer chuva média</option>
         <option value="Raramente, aconteceu em evento específico">c) Raramente, aconteceu em evento específico</option>
         <option value="Não informar">d) Não informar</option>
@@ -113,7 +126,7 @@
       <select id="select-origem">
         <option value="">Selecione...</option>
         <option value="O rio transbordou e subiu para a rua">a) O rio transbordou e subiu para a rua</option>
-        <option value="A água veio da rua de cima e os bueiros não deram conta">b) Os bueiros não deram conta</option>
+        <option value="A água veio da rua de cima e os bueiros não deram conta">b) A água veio da rua de cima e os bueiros não deram conta</option>
         <option value="Não sei / Não consigo identificar">c) Não sei / Não consigo identificar</option>
         <option value="Não informar">d) Não informar</option>
         <option value="outro">e) Outro (escrever)</option>
@@ -121,7 +134,6 @@
       <input type="text" class="outro-input" id="origem-outro" placeholder="Descreva..." style="display:none;" />
 
     </div>
-    <!-- FIM CAMPOS EXTRAS -->
 
     <label>Descrição (opcional)</label>
     <textarea id="desc-input" placeholder="Descreva o problema..."></textarea>

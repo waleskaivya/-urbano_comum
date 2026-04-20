@@ -103,7 +103,23 @@ function updateCounter() {
 }
 
 // ============================================================
-// 8. LÓGICA DOS CAMPOS EXTRAS DE ALAGAMENTO (selects + outro)
+// 8. MODAL "SOBRE O PROJETO" — abre ao clicar no título
+// ============================================================
+document.getElementById('titulo-urbano-comum').addEventListener('click', () => {
+  document.getElementById('modal-sobre').classList.add('open');
+});
+
+document.getElementById('btn-fechar-sobre').addEventListener('click', () => {
+  document.getElementById('modal-sobre').classList.remove('open');
+});
+
+// Fecha ao clicar fora do conteúdo
+document.getElementById('modal-sobre').addEventListener('click', function(e) {
+  if (e.target === this) this.classList.remove('open');
+});
+
+// ============================================================
+// 9. LÓGICA DOS CAMPOS EXTRAS DE ALAGAMENTO
 // ============================================================
 document.getElementById('cat-select').addEventListener('change', function() {
   const campos = document.getElementById('alagamento-fields');
@@ -115,7 +131,6 @@ document.getElementById('cat-select').addEventListener('change', function() {
   }
 });
 
-// Mostra campo de texto quando "outro" é selecionado no select
 function setupSelectOutro(selectId, inputId) {
   const sel = document.getElementById(selectId);
   const inp = document.getElementById(inputId);
@@ -156,7 +171,7 @@ function lerCampoAlagamento(selectId, outroId) {
 }
 
 // ============================================================
-// 9. ADICIONAR MARCADOR NA TELA
+// 10. ADICIONAR MARCADOR NA TELA
 // ============================================================
 function adicionarMarcador({ id, lat, lng, categoria, descricao, autor_token, alag_frequencia, alag_caracteristica, alag_origem }) {
   const cor = catColors[categoria] || '#999';
@@ -199,7 +214,7 @@ function montarPopup(data) {
 }
 
 // ============================================================
-// 10. ATUALIZAR TODOS OS POPUPS
+// 11. ATUALIZAR TODOS OS POPUPS
 // ============================================================
 function atualizarTodosPopups() {
   markers.forEach(({ marker }) => {
@@ -210,7 +225,7 @@ function atualizarTodosPopups() {
 }
 
 // ============================================================
-// 11. EXCLUIR PONTO
+// 12. EXCLUIR PONTO
 // ============================================================
 window.excluirPonto = async function(id) {
   if (!confirm('Excluir este registro?')) return;
@@ -234,7 +249,7 @@ window.excluirPonto = async function(id) {
 };
 
 // ============================================================
-// 12. CARREGAR PONTOS DO SUPABASE
+// 13. CARREGAR PONTOS DO SUPABASE
 // ============================================================
 async function carregarRegistros() {
   const { data, error } = await supabaseClient
@@ -251,7 +266,7 @@ async function carregarRegistros() {
 }
 
 // ============================================================
-// 13. CLICAR NO MAPA → ABRIR MODAL
+// 14. CLICAR NO MAPA → ABRIR MODAL
 // ============================================================
 map.on('click', function(e) {
   pendingLatLng = e.latlng;
@@ -266,7 +281,7 @@ document.getElementById('btn-cancel').onclick = () =>
   document.getElementById('modal').classList.remove('open');
 
 // ============================================================
-// 14. SALVAR NOVO PONTO
+// 15. SALVAR NOVO PONTO
 // ============================================================
 document.getElementById('btn-save').onclick = async function() {
   const cat  = document.getElementById('cat-select').value;
@@ -309,7 +324,7 @@ document.getElementById('btn-save').onclick = async function() {
 };
 
 // ============================================================
-// 15. FILTROS
+// 16. FILTROS
 // ============================================================
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', function() {
@@ -332,7 +347,7 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
 });
 
 // ============================================================
-// 16. FECHAR HINT
+// 17. FECHAR HINT
 // ============================================================
 document.getElementById('close-hint').addEventListener('click', function(e) {
   e.stopPropagation();
@@ -340,7 +355,7 @@ document.getElementById('close-hint').addEventListener('click', function(e) {
 });
 
 // ============================================================
-// 17. ADMIN — ABRIR MODAL DE LOGIN
+// 18. ADMIN — ABRIR MODAL DE LOGIN
 // ============================================================
 document.getElementById('btn-admin-login').addEventListener('click', () => {
   document.getElementById('admin-erro').style.display = 'none';
@@ -354,7 +369,7 @@ document.getElementById('btn-admin-cancel').addEventListener('click', () => {
 });
 
 // ============================================================
-// 18. ADMIN — LOGIN
+// 19. ADMIN — LOGIN
 // ============================================================
 document.getElementById('btn-admin-entrar').addEventListener('click', async function() {
   const email = document.getElementById('admin-email').value.trim();
@@ -390,7 +405,7 @@ document.getElementById('btn-admin-entrar').addEventListener('click', async func
 });
 
 // ============================================================
-// 19. ADMIN — LOGOUT
+// 20. ADMIN — LOGOUT
 // ============================================================
 document.getElementById('btn-logout').addEventListener('click', async () => {
   await supabaseClient.auth.signOut();
@@ -401,7 +416,7 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
 });
 
 // ============================================================
-// 20. VERIFICAR SESSÃO SALVA
+// 21. VERIFICAR SESSÃO SALVA
 // ============================================================
 supabaseClient.auth.getSession().then(({ data }) => {
   if (data.session) {
@@ -413,6 +428,6 @@ supabaseClient.auth.getSession().then(({ data }) => {
 });
 
 // ============================================================
-// 21. INICIAR
+// 22. INICIAR
 // ============================================================
 carregarRegistros();
