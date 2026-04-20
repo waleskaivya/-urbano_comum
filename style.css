@@ -44,7 +44,7 @@ img[src="ppdgr.png"]:hover {
   transform: translateY(1px) scale(1.15);
 }
 
-/* --- HEADER DO MAPA --- */
+/* --- HEADER --- */
 header { 
   background: white; 
   border-bottom: 1px solid #e0e0d8; 
@@ -54,10 +54,60 @@ header {
   justify-content: space-between; 
 }
 header h1 { font-size: 22px; font-weight: 400; color: #1D9E75; font-family: 'Bebas Neue', sans-serif; letter-spacing: 3px; }
-
 header span { font-size: 11px; color: #888; }
 
-/* --- FILTROS E BOTÕES --- */
+/* --- ÁREA DO ADMIN --- */
+#admin-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#btn-admin-login {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #bbb;
+  padding: 4px;
+  border-radius: 50%;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+#btn-admin-login:hover { color: #1D9E75; }
+
+#admin-status {
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #666;
+}
+
+#admin-email-label {
+  font-size: 11px;
+  color: #1D9E75;
+  font-weight: 600;
+}
+
+#btn-logout {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 3px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  color: #666;
+  transition: 0.2s;
+}
+
+#btn-logout:hover {
+  background: #f5f5f5;
+  color: #e53935;
+  border-color: #e53935;
+}
+
+/* --- FILTROS --- */
 .toolbar { 
   background: white; 
   border-bottom: 1px solid #e0e0d8; 
@@ -70,30 +120,29 @@ header span { font-size: 11px; color: #888; }
 .cat-btn { font-size: 11px; padding: 4px 12px; border-radius: 20px; border: 1px solid #ccc; background: white; cursor: pointer; transition: 0.2s; }
 .cat-btn.active { background: #1D9E75; border-color: #1D9E75; color: white; }
 
-/* --- HINT --- posição fixed para ficar FORA do contexto do mapa/Leaflet --- */
+/* --- HINT --- */
 .hint { 
   background-color: rgba(255, 147, 147, 0.4); 
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
-  position: fixed;           /* fixed: relativo à janela, não ao mapa */
-  bottom: 60%;              /* flutua acima do rodapé */
+  position: fixed;
+  bottom: 50%;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 9998;             /* abaixo do modal (9999) mas acima de tudo mais */
+  z-index: 9998;
   display: flex;
   align-items: center;
   gap: 15px; 
   width: auto;
   max-width: 90%;
-  color: #900c0c;
+  color: #9b0000;
   padding: 8px 15px 8px 20px;
   font-size: 12px;
   border-radius: 5px;
-  border: 1px solid rgba(144, 12, 12, 0.1);
+  border: 1px solid rgba(199, 0, 0, 0.459);
   pointer-events: auto;
 }
 
-/* Botão X */
 #close-hint {
   background: rgba(144, 12, 12, 0.1);
   border: none;
@@ -111,11 +160,9 @@ header span { font-size: 11px; color: #888; }
   line-height: 1;
 }
 
-#close-hint:hover {
-  background: rgba(144, 12, 12, 0.3);
-}
+#close-hint:hover { background: rgba(144, 12, 12, 0.3); }
 
-/* --- ÁREA DO MAPA --- */
+/* --- MAPA --- */
 #map { 
   width: 100%; 
   flex-grow: 1; 
@@ -141,21 +188,41 @@ footer { background: white; padding: 0px; text-align: center; font-size: 10px; c
 .leg-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
 .leg-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 
-/* --- MODAL --- */
+/* --- MODAIS --- */
 .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.2); z-index: 9999; align-items: center; justify-content: center; }
 .modal-bg.open { display: flex; }
 .modal {
-  background: rgba(255, 255, 255, 0.50); 
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
+  background: rgba(255, 255, 255, 0.5); 
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   border-radius: 12px;
   padding: 25px;
-  width: 320px;
+  width: 340px;
+  max-height: 85vh;
+  overflow-y: auto;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 .modal h3 { font-size: 16px; margin-bottom: 15px; color: #333; }
 .modal label { font-size: 12px; color: #666; display: block; margin-bottom: 5px; }
-.modal select, .modal textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; }
+.modal select, .modal textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit; font-size: 13px; }
 .modal-btns { display: flex; gap: 10px; justify-content: flex-end; }
 .btn-save { background: #1D9E75; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 .btn-cancel { background: white; border: 1px solid #ccc; padding: 10px 20px; border-radius: 8px; cursor: pointer; color: #666; }
+
+/* --- CAMPO "OUTRO" DOS ALAGAMENTOS --- */
+.outro-input {
+  width: 100%;
+  padding: 9px 10px;
+  margin-top: -10px;
+  margin-bottom: 15px;
+  border: 1px solid #c5b8ff;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.outro-input:focus {
+  border-color: #4b23ff;
+}

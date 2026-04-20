@@ -29,7 +29,14 @@
 
 <header>
   <h1>URBANO COMUM</h1>
-  <span>Mapeamento Comunitário · Pato Branco, PR</span>
+  <div id="admin-area">
+      <span>Mapeamento Comunitário · Pato Branco, PR</span>
+    <button id="btn-admin-login" title="Área administrativa">⚙</button>
+    <span id="admin-status" style="display:none;">
+      <span id="admin-email-label"></span>
+      <button id="btn-logout">Sair</button>
+    </span>
+  </div>
 </header>
 
 <div class="toolbar">
@@ -59,9 +66,11 @@
 
 <div class="counter" id="counter">0 registros no mapa</div>
 
+<!-- MODAL: Registrar problema -->
 <div class="modal-bg" id="modal">
   <div class="modal">
     <h3>Registrar problema</h3>
+
     <label>Categoria</label>
     <select id="cat-select">
       <option value="">Selecione a categoria...</option>
@@ -74,8 +83,49 @@
       <option value="sinalizacao">Sinalização</option>
       <option value="meio_ambiente">Meio Ambiente</option>
     </select>
+
+    <!-- CAMPOS EXTRAS: só aparecem quando categoria = alagamento -->
+    <div id="alagamento-fields" style="display:none;">
+
+      <label>Quando os alagamentos costumam acontecer?</label>
+      <select id="select-frequencia">
+        <option value="">Selecione...</option>
+        <option value="Só em chuvas muito fortes">a) Só em chuvas muito fortes</option>
+        <option value="Em qualquer chuva média">b) Em qualquer chuva média</option>
+        <option value="Raramente, aconteceu em evento específico">c) Raramente, aconteceu em evento específico</option>
+        <option value="Não informar">d) Não informar</option>
+        <option value="outro">e) Outro (escrever)</option>
+      </select>
+      <input type="text" class="outro-input" id="frequencia-outro" placeholder="Descreva..." style="display:none;" />
+
+      <label>Quais as características do alagamento?</label>
+      <select id="select-caracteristica">
+        <option value="">Selecione...</option>
+        <option value="Cobre o cano do escapamento de um carro">a) Cobre o cano do escapamento de um carro</option>
+        <option value="Cobre um carro inteiro">b) Cobre um carro inteiro</option>
+        <option value="Demora a baixar o nível da água">c) Demora a baixar o nível da água</option>
+        <option value="Não informar">d) Não informar</option>
+        <option value="outro">e) Outro (escrever)</option>
+      </select>
+      <input type="text" class="outro-input" id="caracteristica-outro" placeholder="Descreva..." style="display:none;" />
+
+      <label>Você sabe a origem do alagamento?</label>
+      <select id="select-origem">
+        <option value="">Selecione...</option>
+        <option value="O rio transbordou e subiu para a rua">a) O rio transbordou e subiu para a rua</option>
+        <option value="A água veio da rua de cima e os bueiros não deram conta">b) Os bueiros não deram conta</option>
+        <option value="Não sei / Não consigo identificar">c) Não sei / Não consigo identificar</option>
+        <option value="Não informar">d) Não informar</option>
+        <option value="outro">e) Outro (escrever)</option>
+      </select>
+      <input type="text" class="outro-input" id="origem-outro" placeholder="Descreva..." style="display:none;" />
+
+    </div>
+    <!-- FIM CAMPOS EXTRAS -->
+
     <label>Descrição (opcional)</label>
     <textarea id="desc-input" placeholder="Descreva o problema..."></textarea>
+
     <div class="modal-btns">
       <button class="btn-cancel" id="btn-cancel">Cancelar</button>
       <button class="btn-save" id="btn-save">Salvar</button>
@@ -83,7 +133,22 @@
   </div>
 </div>
 
-<!-- ORDEM CORRETA: Leaflet → Supabase → seu script.js -->
+<!-- MODAL: Login admin -->
+<div class="modal-bg" id="modal-admin">
+  <div class="modal">
+    <h3>Acesso Administrativo</h3>
+    <label>Email</label>
+    <input type="email" id="admin-email" placeholder="seu@email.com" style="width:100%;padding:10px;margin-bottom:15px;border:1px solid #ddd;border-radius:8px;font-family:inherit;" />
+    <label>Senha</label>
+    <input type="password" id="admin-senha" placeholder="••••••••" style="width:100%;padding:10px;margin-bottom:15px;border:1px solid #ddd;border-radius:8px;font-family:inherit;" />
+    <p id="admin-erro" style="color:#e53935;font-size:12px;margin-bottom:10px;display:none;"></p>
+    <div class="modal-btns">
+      <button class="btn-cancel" id="btn-admin-cancel">Cancelar</button>
+      <button class="btn-save" id="btn-admin-entrar">Entrar</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
