@@ -126,7 +126,7 @@ header span { font-size: 11px; color: #888; }
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
   position: fixed;
-  bottom: 50%;
+  bottom: 40%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9998;
