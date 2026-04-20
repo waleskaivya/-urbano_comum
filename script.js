@@ -103,23 +103,66 @@ function updateCounter() {
 }
 
 // ============================================================
-// 8. MODAL "SOBRE O PROJETO" — abre ao clicar no título
+// 8. FLUXO DE BOAS-VINDAS
+// Ao fechar boas-vindas → mostra hint de instrução
+// Ao fechar hint → acesso livre ao mapa
+// Clicar em "URBANO COMUM" → reabre boas-vindas
 // ============================================================
+function mostrarHintInstrucao() {
+  document.getElementById('hint-box').style.display = 'flex';
+}
+
+function fecharBoasVindas(viaOK) {
+  // Salva preferência "não mostrar novamente" só quando clica em Entendido!
+  if (viaOK && document.getElementById('nao-mostrar-novamente').checked) {
+    localStorage.setItem('uc_nao_mostrar_boasvindas', '1');
+  }
+  document.getElementById('modal-sobre').classList.remove('open');
+  mostrarHintInstrucao();
+}
+
+// Botão X — fecha sem salvar preferência
+document.getElementById('btn-fechar-sobre').addEventListener('click', () => {
+  fecharBoasVindas(false);
+});
+
+// Botão "Entendido!" — fecha e salva preferência se marcado
+document.getElementById('btn-fechar-sobre-ok').addEventListener('click', () => {
+  fecharBoasVindas(true);
+});
+
+// Clicar fora — fecha sem salvar preferência
+document.getElementById('modal-sobre').addEventListener('click', function(e) {
+  if (e.target === this) fecharBoasVindas(false);
+});
+
+// Clicar no título URBANO COMUM — reabre boas-vindas
 document.getElementById('titulo-urbano-comum').addEventListener('click', () => {
+  document.getElementById('hint-box').style.display = 'none';
   document.getElementById('modal-sobre').classList.add('open');
 });
 
-document.getElementById('btn-fechar-sobre').addEventListener('click', () => {
-  document.getElementById('modal-sobre').classList.remove('open');
-});
-
-// Fecha ao clicar fora do conteúdo
-document.getElementById('modal-sobre').addEventListener('click', function(e) {
-  if (e.target === this) this.classList.remove('open');
+// Ao carregar: abre boas-vindas se não marcou "não mostrar"
+window.addEventListener('load', () => {
+  const naoMostrar = localStorage.getItem('uc_nao_mostrar_boasvindas');
+  if (naoMostrar === '1') {
+    // Pula boas-vindas, mostra direto o hint de instrução
+    mostrarHintInstrucao();
+  } else {
+    document.getElementById('modal-sobre').classList.add('open');
+  }
 });
 
 // ============================================================
-// 9. LÓGICA DOS CAMPOS EXTRAS DE ALAGAMENTO
+// 9. FECHAR HINT DE INSTRUÇÃO
+// ============================================================
+document.getElementById('close-hint').addEventListener('click', function(e) {
+  e.stopPropagation();
+  document.getElementById('hint-box').style.display = 'none';
+});
+
+// ============================================================
+// 10. LÓGICA DOS CAMPOS EXTRAS DE ALAGAMENTO
 // ============================================================
 document.getElementById('cat-select').addEventListener('change', function() {
   const campos = document.getElementById('alagamento-fields');
@@ -171,7 +214,7 @@ function lerCampoAlagamento(selectId, outroId) {
 }
 
 // ============================================================
-// 10. ADICIONAR MARCADOR NA TELA
+// 11. ADICIONAR MARCADOR NA TELA
 // ============================================================
 function adicionarMarcador({ id, lat, lng, categoria, descricao, autor_token, alag_frequencia, alag_caracteristica, alag_origem }) {
   const cor = catColors[categoria] || '#999';
@@ -214,7 +257,7 @@ function montarPopup(data) {
 }
 
 // ============================================================
-// 11. ATUALIZAR TODOS OS POPUPS
+// 12. ATUALIZAR TODOS OS POPUPS
 // ============================================================
 function atualizarTodosPopups() {
   markers.forEach(({ marker }) => {
@@ -225,7 +268,7 @@ function atualizarTodosPopups() {
 }
 
 // ============================================================
-// 12. EXCLUIR PONTO
+// 13. EXCLUIR PONTO
 // ============================================================
 window.excluirPonto = async function(id) {
   if (!confirm('Excluir este registro?')) return;
@@ -249,7 +292,7 @@ window.excluirPonto = async function(id) {
 };
 
 // ============================================================
-// 13. CARREGAR PONTOS DO SUPABASE
+// 14. CARREGAR PONTOS DO SUPABASE
 // ============================================================
 async function carregarRegistros() {
   const { data, error } = await supabaseClient
@@ -266,7 +309,7 @@ async function carregarRegistros() {
 }
 
 // ============================================================
-// 14. CLICAR NO MAPA → ABRIR MODAL
+// 15. CLICAR NO MAPA → ABRIR MODAL
 // ============================================================
 map.on('click', function(e) {
   pendingLatLng = e.latlng;
@@ -281,7 +324,7 @@ document.getElementById('btn-cancel').onclick = () =>
   document.getElementById('modal').classList.remove('open');
 
 // ============================================================
-// 15. SALVAR NOVO PONTO
+// 16. SALVAR NOVO PONTO
 // ============================================================
 document.getElementById('btn-save').onclick = async function() {
   const cat  = document.getElementById('cat-select').value;
@@ -324,7 +367,7 @@ document.getElementById('btn-save').onclick = async function() {
 };
 
 // ============================================================
-// 16. FILTROS
+// 17. FILTROS
 // ============================================================
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', function() {
@@ -344,14 +387,6 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
       else map.removeLayer(m.marker);
     });
   });
-});
-
-// ============================================================
-// 17. FECHAR HINT
-// ============================================================
-document.getElementById('close-hint').addEventListener('click', function(e) {
-  e.stopPropagation();
-  document.getElementById('hint-box').style.display = 'none';
 });
 
 // ============================================================

@@ -1,14 +1,18 @@
 /* --- RESET E ESTRUTURA --- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html, body {
+  height: 100%;
+}
+
 body { 
   font-family: system-ui, sans-serif; 
   background: #f5f5f0; 
   color: #1a1a1a; 
   display: flex; 
   flex-direction: column; 
-  min-height: 100vh; 
-  overflow-x: hidden;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* --- CABEÇALHO INSTITUCIONAL (LOGO-MARCAS) --- */
@@ -19,6 +23,7 @@ body {
   align-items: center;
   gap: 60px;
   padding: 0;
+  flex-shrink: 0;
 }
 
 .institutional-logos img {
@@ -51,13 +56,15 @@ header {
   padding: 8px 20px; 
   display: flex; 
   align-items: center; 
-  justify-content: space-between; 
+  justify-content: space-between;
+  flex-shrink: 0;
 }
+
 .header-info {
   display: flex;
-  justify-content: flex-end; /* Empurra tudo para a direita */
-  align-items: center;      /* Alinha verticalmente o texto e o ícone */
-  gap: 10px;                /* Espaço entre o texto e a engrenagem */
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
 }
 
 #titulo-urbano-comum {
@@ -136,20 +143,21 @@ header span { font-size: 11px; color: #888; }
   display: flex; 
   align-items: center; 
   gap: 8px; 
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
+  flex-shrink: 0;
 }
 .cat-btn { font-size: 11px; padding: 4px 12px; border-radius: 20px; border: 1px solid #ccc; background: white; cursor: pointer; transition: 0.2s; }
 .cat-btn.active { background: #1D9E75; border-color: #1D9E75; color: white; }
 
-/* --- HINT --- */
+/* --- HINT DE INSTRUÇÃO (centralizado, fixed) --- */
 .hint { 
   background-color: rgba(255, 147, 147, 0.4); 
   backdrop-filter: blur(1px);
   -webkit-backdrop-filter: blur(1px);
   position: fixed;
-  bottom: 40%;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   z-index: 9998;
   display: flex;
   align-items: center;
@@ -157,11 +165,12 @@ header span { font-size: 11px; color: #888; }
   width: auto;
   max-width: 90%;
   color: #900c0c;
-  padding: 8px 15px 8px 20px;
+  padding: 10px 15px 10px 20px;
   font-size: 12px;
   border-radius: 5px;
   border: 1px solid rgba(144, 12, 12, 0.1);
   pointer-events: auto;
+  white-space: nowrap;
 }
 
 #close-hint {
@@ -179,20 +188,42 @@ header span { font-size: 11px; color: #888; }
   justify-content: center;
   transition: 0.2s;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 #close-hint:hover { background: rgba(144, 12, 12, 0.3); }
 
-/* --- MAPA --- */
+/* --- CONTAINER DO MAPA (ocupa todo espaço restante) --- */
+#map-container {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
 #map { 
-  width: 100%; 
-  flex-grow: 1; 
-  min-height: 400px;
+  width: 100%;
+  height: 100%;
 }
 
 /* --- RODAPÉ E LEGENDA --- */
-.counter { background: white; border-top: 1px solid #e0e0d8; padding: 6px 20px; font-size: 11px; color: #666; }
-footer { background: white; padding: 0px; text-align: center; font-size: 10px; color: #aaa; }
+.counter { 
+  background: white; 
+  border-top: 1px solid #e0e0d8; 
+  padding: 6px 20px; 
+  font-size: 11px; 
+  color: #666;
+  flex-shrink: 0;
+}
+
+footer { 
+  background: white; 
+  padding: 0px; 
+  text-align: center; 
+  font-size: 10px; 
+  color: #aaa;
+  flex-shrink: 0;
+}
 
 .legend { 
   position: absolute; 
@@ -211,22 +242,20 @@ footer { background: white; padding: 0px; text-align: center; font-size: 10px; c
 
 /* --- MODAIS --- */
 .modal-bg { 
-    display: none; 
-    position: fixed; 
-    inset: 0; 
-    background: rgba(161, 161, 161, 0.582); 
-    z-index: 9999; 
-    align-items: center; 
-    justify-content: center;
-    border-radius: 12px;
-
+  display: none; 
+  position: fixed; 
+  inset: 0; 
+  background: rgba(161, 161, 161, 0.582); 
+  z-index: 9999; 
+  align-items: center; 
+  justify-content: center;
 }
 .modal-bg.open { display: flex; }
 
 .modal {
-  background: rgba(255, 255, 255, 0.95); 
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.55); 
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
   border-radius: 12px;
   padding: 25px;
   width: 340px;
@@ -240,7 +269,7 @@ footer { background: white; padding: 0px; text-align: center; font-size: 10px; c
   width: 480px;
   max-width: 92vw;
   position: relative;
-  padding: 35px 30px 28px;
+  padding: 35px 30px 24px;
 }
 
 .modal-sobre-conteudo h2 {
@@ -259,8 +288,8 @@ footer { background: white; padding: 0px; text-align: center; font-size: 10px; c
   text-align: justify;
 }
 
-.modal-sobre-conteudo p:last-child {
-  margin-bottom: 0;
+.modal-sobre-conteudo p:last-of-type {
+  margin-bottom: 18px;
 }
 
 .btn-fechar-sobre {
@@ -286,6 +315,34 @@ footer { background: white; padding: 0px; text-align: center; font-size: 10px; c
 .btn-fechar-sobre:hover {
   background: rgba(0,0,0,0.12);
   color: #333;
+}
+
+/* Rodapé do modal de boas-vindas: checkbox + botão */
+.sobre-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  border-top: 1px solid #eee;
+  padding-top: 16px;
+}
+
+.nao-mostrar-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: #888;
+  cursor: pointer;
+  user-select: none;
+}
+
+.nao-mostrar-label input[type="checkbox"] {
+  accent-color: #1D9E75;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
 }
 
 /* --- MODAL FORMULÁRIO --- */
