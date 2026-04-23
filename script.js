@@ -23,15 +23,15 @@ let adminLogado = false;
 // 4. CORES E LABELS  (nova categoria: imovel_abandonado)
 // ============================================================
 const catColors = {
-  alagamento:        '#1FA675',
-  pavimentacao:      '#ffbb00',
-  calcada:           '#521FED',
-  iluminacao:        '#fffb00',
-  acessibilidade:    '#9ecff7',
-  lixo:              '#af02ff',
-  sinalizacao:       '#007bff',
-  meio_ambiente:     '#00ff55',
-  imovel_abandonado: '#ff86b8'
+  alagamento:        '#4b23ff',
+  pavimentacao:      '#5e5e5e',
+  calcada:           '#acacac',
+  iluminacao:        '#fffc57',
+  acessibilidade:    '#00c3ff',
+  lixo:              '#3B6D11',
+  sinalizacao:       '#ff9100',
+  meio_ambiente:     '#00db63',
+  imovel_abandonado: '#8B2FC9'
 };
 
 const catLabels = {
@@ -280,11 +280,11 @@ function montarPopup(data) {
 
   const btnDenunciar = (!ehAutor && !adminLogado)
     ? (jaDenunciou
-        ? `<button disabled
+        ? `<button onclick="denunciarPonto('${data.id}')"
               style="margin-top:8px;margin-left:4px;padding:3px 10px;
-                     background:#fbe9e7;color:#e53935;border:1px solid #e53935;
-                     border-radius:4px;font-size:11px;cursor:default;opacity:0.8;">
-              ⚑ Já denunciado
+                     background:#e53935;color:white;border:1px solid #e53935;
+                     border-radius:4px;font-size:11px;cursor:pointer;">
+              ⚑ Denunciado
            </button>`
         : `<button onclick="denunciarPonto('${data.id}')"
               style="margin-top:8px;margin-left:4px;padding:3px 10px;
@@ -292,6 +292,15 @@ function montarPopup(data) {
                      border-radius:4px;cursor:pointer;font-size:11px;">
               ⚑ Denunciar
            </button>`)
+    : '';
+
+  const btnIgnorarDenuncia = (adminLogado && data.denunciado)
+    ? `<button onclick="ignorarDenuncias('${data.id}')"
+          style="margin-top:8px;margin-left:4px;padding:3px 10px;
+                 background:white;color:#888;border:1px solid #ccc;
+                 border-radius:4px;cursor:pointer;font-size:11px;">
+          ✕ Ignorar denúncias
+       </button>`
     : '';
 
   const badgeDenuncias = (adminLogado && data.denunciado)
@@ -315,7 +324,7 @@ function montarPopup(data) {
     ${extras}
     ${data.descricao ? `<p style="margin:4px 0 0">${data.descricao}</p>` : ''}
     ${badgeDenuncias}
-    <div style="display:flex;flex-wrap:wrap;gap:0;">${btnExcluir}${btnDenunciar}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:0;">${btnExcluir}${btnDenunciar}${btnIgnorarDenuncia}</div>
   `;
 }
 
@@ -362,24 +371,52 @@ window.denunciarPonto = async function(id) {
   if (errGet) { alert('Erro ao buscar registro.'); return; }
 
   const atual = Array.isArray(registro.denuncias) ? registro.denuncias : [];
-  if (atual.includes(meuToken)) return;
+  const jaDenunciou = atual.includes(meuToken);
 
-  const novos = [...atual, meuToken];
+  // Toggle: remove se já denunciou, adiciona se não
+  const novos = jaDenunciou
+    ? atual.filter(t => t !== meuToken)
+    : [...atual, meuToken];
 
   const { error: errUpd } = await supabaseClient
     .from('registros').update({ denuncias: novos }).eq('id', id);
 
-  if (errUpd) { alert('Erro ao registrar denúncia.'); return; }
+  if (errUpd) { alert('Erro ao atualizar denúncia.'); return; }
 
   // Atualiza estado local e UI
   const d = item.marker._registroData;
   d.denuncias = novos.length;
   d.denunciasTokens = novos;
-  d.denunciado = true;
-  item.denunciado = true;
+  d.denunciado = novos.length > 0;
+  item.denunciado = d.denunciado;
 
   const cor = catColors[d.categoria] || '#999';
   item.marker.setIcon(makeIcon(cor, adminLogado && d.denunciado));
+  item.marker.setPopupContent(montarPopup(d));
+  item.marker.closePopup();
+  item.marker.openPopup();
+};
+
+// ============================================================
+// 15b. ADMIN — IGNORAR DENÚNCIAS
+// ============================================================
+window.ignorarDenuncias = async function(id) {
+  const item = markers.find(m => m.id === id);
+  if (!item) return;
+
+  const { error } = await supabaseClient
+    .from('registros').update({ denuncias: [] }).eq('id', id);
+
+  if (error) { alert('Erro ao ignorar denúncias.'); return; }
+
+  const d = item.marker._registroData;
+  d.denuncias = 0;
+  d.denunciasTokens = [];
+  d.denunciado = false;
+  item.denunciado = false;
+
+  const cor = catColors[d.categoria] || '#999';
+  item.marker.setIcon(makeIcon(cor, false));
   item.marker.setPopupContent(montarPopup(d));
   item.marker.closePopup();
   item.marker.openPopup();
