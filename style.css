@@ -1,3 +1,9 @@
+/* --- ANIMAÇÃO ÍCONE DENUNCIADO (visível só admin) --- */
+@keyframes pulso {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(229,57,53,0.4), 0 1px 5px rgba(0,0,0,0.35); }
+  50%       { box-shadow: 0 0 0 6px rgba(229,57,53,0.15), 0 1px 5px rgba(0,0,0,0.35); }
+}
+
 /* --- RESET E ESTRUTURA --- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 

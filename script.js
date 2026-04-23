@@ -20,28 +20,30 @@ if (!meuToken) {
 let adminLogado = false;
 
 // ============================================================
-// 4. CORES E LABELS
+// 4. CORES E LABELS  (nova categoria: imovel_abandonado)
 // ============================================================
 const catColors = {
-  alagamento:    '#4b23ff',
-  pavimentacao:  '#5e5e5e',
-  calcada:       '#acacac',
-  iluminacao:    '#fffc57',
-  acessibilidade:'#00c3ff',
-  lixo:          '#3B6D11',
-  sinalizacao:   '#ff9100',
-  meio_ambiente: '#00db63'
+  alagamento:        '#1FA675',
+  pavimentacao:      '#ffbb00',
+  calcada:           '#521FED',
+  iluminacao:        '#fffb00',
+  acessibilidade:    '#9ecff7',
+  lixo:              '#af02ff',
+  sinalizacao:       '#007bff',
+  meio_ambiente:     '#00ff55',
+  imovel_abandonado: '#ff86b8'
 };
 
 const catLabels = {
-  alagamento:    'Alagamento',
-  pavimentacao:  'Pavimentação',
-  calcada:       'Calçada',
-  iluminacao:    'Iluminação',
-  acessibilidade:'Acessibilidade',
-  lixo:          'Lixo',
-  sinalizacao:   'Sinalização',
-  meio_ambiente: 'Meio Ambiente'
+  alagamento:        'Alagamento',
+  pavimentacao:      'Pavimentação',
+  calcada:           'Calçada',
+  iluminacao:        'Iluminação',
+  acessibilidade:    'Acessibilidade',
+  lixo:              'Lixo',
+  sinalizacao:       'Sinalização',
+  meio_ambiente:     'Meio Ambiente',
+  imovel_abandonado: 'Imóvel Abandonado'
 };
 
 // ============================================================
@@ -83,13 +85,53 @@ Object.keys(catColors).forEach(cat => {
 });
 
 // ============================================================
-// 7. ESTADO LOCAL
+// 7. ESTADO LOCAL + CLUSTER
 // ============================================================
 let markers = [];
 let pendingLatLng = null;
 let filtroAtivo = 'todos';
 
-function makeIcon(color) {
+// Cluster group — agrupa marcadores próximos com círculo numérico
+const clusterGroup = L.markerClusterGroup({
+  maxClusterRadius: 50,
+  showCoverageOnHover: false,
+  iconCreateFunction: function(cluster) {
+    const count = cluster.getChildCount();
+    let size = 32, fontSize = 13;
+    if (count >= 50) { size = 46; fontSize = 16; }
+    else if (count >= 20) { size = 40; fontSize = 15; }
+    else if (count >= 10) { size = 36; fontSize = 14; }
+    return L.divIcon({
+      className: '',
+      html: `<div style="
+        width:${size}px;height:${size}px;border-radius:50%;
+        background:rgba(29,158,117,0.85);
+        border:3px solid white;
+        box-shadow:0 2px 8px rgba(0,0,0,0.35);
+        display:flex;align-items:center;justify-content:center;
+        color:white;font-weight:700;font-size:${fontSize}px;
+        font-family:system-ui,sans-serif;
+      ">${count}</div>`,
+      iconSize: [size, size],
+      iconAnchor: [size/2, size/2]
+    });
+  }
+});
+clusterGroup.addTo(map);
+
+function makeIcon(color, denunciado) {
+  if (denunciado && adminLogado) {
+    return L.divIcon({
+      className: '',
+      html: `<div style="
+        width:18px;height:18px;border-radius:50%;
+        background:#e53935;border:2px solid white;
+        box-shadow:0 0 0 3px rgba(229,57,53,0.35),0 1px 5px rgba(0,0,0,0.35);
+      "></div>`,
+      iconSize: [18, 18],
+      iconAnchor: [9, 9]
+    });
+  }
   return L.divIcon({
     className: '',
     html: `<div style="width:16px;height:16px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 1px 5px rgba(0,0,0,0.35);"></div>`,
@@ -104,16 +146,12 @@ function updateCounter() {
 
 // ============================================================
 // 8. FLUXO DE BOAS-VINDAS
-// Ao fechar boas-vindas → mostra hint de instrução
-// Ao fechar hint → acesso livre ao mapa
-// Clicar em "URBANO COMUM" → reabre boas-vindas
 // ============================================================
 function mostrarHintInstrucao() {
   document.getElementById('hint-box').style.display = 'flex';
 }
 
 function fecharBoasVindas(viaOK) {
-  // Salva preferência "não mostrar novamente" só quando clica em Entendido!
   if (viaOK && document.getElementById('nao-mostrar-novamente').checked) {
     localStorage.setItem('uc_nao_mostrar_boasvindas', '1');
   }
@@ -121,32 +159,20 @@ function fecharBoasVindas(viaOK) {
   mostrarHintInstrucao();
 }
 
-// Botão X — fecha sem salvar preferência
-document.getElementById('btn-fechar-sobre').addEventListener('click', () => {
-  fecharBoasVindas(false);
-});
-
-// Botão "Entendido!" — fecha e salva preferência se marcado
-document.getElementById('btn-fechar-sobre-ok').addEventListener('click', () => {
-  fecharBoasVindas(true);
-});
-
-// Clicar fora — fecha sem salvar preferência
+document.getElementById('btn-fechar-sobre').addEventListener('click', () => fecharBoasVindas(false));
+document.getElementById('btn-fechar-sobre-ok').addEventListener('click', () => fecharBoasVindas(true));
 document.getElementById('modal-sobre').addEventListener('click', function(e) {
   if (e.target === this) fecharBoasVindas(false);
 });
 
-// Clicar no título URBANO COMUM — reabre boas-vindas
 document.getElementById('titulo-urbano-comum').addEventListener('click', () => {
   document.getElementById('hint-box').style.display = 'none';
   document.getElementById('modal-sobre').classList.add('open');
 });
 
-// Ao carregar: abre boas-vindas se não marcou "não mostrar"
 window.addEventListener('load', () => {
   const naoMostrar = localStorage.getItem('uc_nao_mostrar_boasvindas');
   if (naoMostrar === '1') {
-    // Pula boas-vindas, mostra direto o hint de instrução
     mostrarHintInstrucao();
   } else {
     document.getElementById('modal-sobre').classList.add('open');
@@ -154,7 +180,7 @@ window.addEventListener('load', () => {
 });
 
 // ============================================================
-// 9. FECHAR HINT DE INSTRUÇÃO
+// 9. FECHAR HINT
 // ============================================================
 document.getElementById('close-hint').addEventListener('click', function(e) {
   e.stopPropagation();
@@ -162,7 +188,7 @@ document.getElementById('close-hint').addEventListener('click', function(e) {
 });
 
 // ============================================================
-// 10. LÓGICA DOS CAMPOS EXTRAS DE ALAGAMENTO
+// 10. CAMPOS EXTRAS DE ALAGAMENTO
 // ============================================================
 document.getElementById('cat-select').addEventListener('change', function() {
   const campos = document.getElementById('alagamento-fields');
@@ -178,13 +204,8 @@ function setupSelectOutro(selectId, inputId) {
   const sel = document.getElementById(selectId);
   const inp = document.getElementById(inputId);
   sel.addEventListener('change', function() {
-    if (this.value === 'outro') {
-      inp.style.display = 'block';
-      inp.focus();
-    } else {
-      inp.style.display = 'none';
-      inp.value = '';
-    }
+    if (this.value === 'outro') { inp.style.display = 'block'; inp.focus(); }
+    else { inp.style.display = 'none'; inp.value = ''; }
   });
 }
 
@@ -205,7 +226,7 @@ function limparCamposAlagamento() {
 
 function lerCampoAlagamento(selectId, outroId) {
   const sel = document.getElementById(selectId);
-  if (!sel.value || sel.value === '') return null;
+  if (!sel.value) return null;
   if (sel.value === 'outro') {
     const texto = document.getElementById(outroId).value.trim();
     return texto ? `Outro: ${texto}` : 'Outro';
@@ -214,31 +235,72 @@ function lerCampoAlagamento(selectId, outroId) {
 }
 
 // ============================================================
-// 11. ADICIONAR MARCADOR NA TELA
+// 11. ADICIONAR MARCADOR
 // ============================================================
-function adicionarMarcador({ id, lat, lng, categoria, descricao, autor_token, alag_frequencia, alag_caracteristica, alag_origem }) {
-  const cor = catColors[categoria] || '#999';
-  const marker = L.marker([lat, lng], { icon: makeIcon(cor) });
+function adicionarMarcador({ id, lat, lng, categoria, descricao, autor_token,
+    alag_frequencia, alag_caracteristica, alag_origem, denuncias, denunciasTokens }) {
 
-  marker._registroData = { id, lat, lng, categoria, descricao, autor_token, alag_frequencia, alag_caracteristica, alag_origem };
+  const tokens = Array.isArray(denunciasTokens) ? denunciasTokens
+               : Array.isArray(denuncias)        ? denuncias
+               : [];
+  const qtd = tokens.length;
+  const denunciado = qtd > 0;
+  const cor = catColors[categoria] || '#999';
+
+  const marker = L.marker([lat, lng], { icon: makeIcon(cor, denunciado) });
+
+  marker._registroData = {
+    id, lat, lng, categoria, descricao, autor_token,
+    alag_frequencia, alag_caracteristica, alag_origem,
+    denuncias: qtd, denunciasTokens: tokens, denunciado
+  };
   marker.bindPopup(montarPopup(marker._registroData));
 
-  if (filtroAtivo === 'todos' || filtroAtivo === categoria) {
-    marker.addTo(map);
-  }
-
-  markers.push({ marker, cat: categoria, id, autorToken: autor_token });
+  clusterGroup.addLayer(marker);
+  markers.push({ marker, cat: categoria, id, autorToken: autor_token, denunciado });
   updateCounter();
 }
 
+// ============================================================
+// 12. MONTAR POPUP
+// ============================================================
 function montarPopup(data) {
   const ehAutor = data.autor_token === meuToken;
+
   const btnExcluir = (ehAutor || adminLogado)
     ? `<button onclick="excluirPonto('${data.id}')"
          style="margin-top:8px;padding:3px 10px;background:#e53935;color:white;
                 border:none;border-radius:4px;cursor:pointer;font-size:11px;">
          Excluir
        </button>`
+    : '';
+
+  const jaDenunciou = Array.isArray(data.denunciasTokens)
+    && data.denunciasTokens.includes(meuToken);
+
+  const btnDenunciar = (!ehAutor && !adminLogado)
+    ? (jaDenunciou
+        ? `<button disabled
+              style="margin-top:8px;margin-left:4px;padding:3px 10px;
+                     background:#fbe9e7;color:#e53935;border:1px solid #e53935;
+                     border-radius:4px;font-size:11px;cursor:default;opacity:0.8;">
+              ⚑ Já denunciado
+           </button>`
+        : `<button onclick="denunciarPonto('${data.id}')"
+              style="margin-top:8px;margin-left:4px;padding:3px 10px;
+                     background:white;color:#e53935;border:1px solid #e53935;
+                     border-radius:4px;cursor:pointer;font-size:11px;">
+              ⚑ Denunciar
+           </button>`)
+    : '';
+
+  const badgeDenuncias = (adminLogado && data.denunciado)
+    ? `<div style="margin-top:6px;">
+         <span style="display:inline-block;padding:2px 8px;
+           background:#e53935;color:white;border-radius:10px;font-size:10px;font-weight:600;">
+           ⚑ ${data.denuncias} denúncia${data.denuncias > 1 ? 's' : ''}
+         </span>
+       </div>`
     : '';
 
   let extras = '';
@@ -252,64 +314,94 @@ function montarPopup(data) {
     <strong>${catLabels[data.categoria] || data.categoria}</strong>
     ${extras}
     ${data.descricao ? `<p style="margin:4px 0 0">${data.descricao}</p>` : ''}
-    ${btnExcluir}
+    ${badgeDenuncias}
+    <div style="display:flex;flex-wrap:wrap;gap:0;">${btnExcluir}${btnDenunciar}</div>
   `;
 }
 
 // ============================================================
-// 12. ATUALIZAR TODOS OS POPUPS
+// 13. ATUALIZAR TODOS OS POPUPS (após login/logout admin)
 // ============================================================
 function atualizarTodosPopups() {
   markers.forEach(({ marker }) => {
-    if (marker._registroData) {
-      marker.setPopupContent(montarPopup(marker._registroData));
-    }
+    if (!marker._registroData) return;
+    const d = marker._registroData;
+    const cor = catColors[d.categoria] || '#999';
+    marker.setIcon(makeIcon(cor, d.denunciado));
+    marker.setPopupContent(montarPopup(d));
   });
 }
 
 // ============================================================
-// 13. EXCLUIR PONTO
+// 14. EXCLUIR PONTO
 // ============================================================
 window.excluirPonto = async function(id) {
   if (!confirm('Excluir este registro?')) return;
 
-  const { error } = await supabaseClient
-    .from('registros')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    alert('Erro ao excluir: ' + error.message);
-    return;
-  }
+  const { error } = await supabaseClient.from('registros').delete().eq('id', id);
+  if (error) { alert('Erro ao excluir: ' + error.message); return; }
 
   const idx = markers.findIndex(m => m.id === id);
   if (idx !== -1) {
-    map.removeLayer(markers[idx].marker);
+    clusterGroup.removeLayer(markers[idx].marker);
     markers.splice(idx, 1);
     updateCounter();
   }
 };
 
 // ============================================================
-// 14. CARREGAR PONTOS DO SUPABASE
+// 15. DENUNCIAR PONTO
+// ============================================================
+window.denunciarPonto = async function(id) {
+  const item = markers.find(m => m.id === id);
+  if (!item) return;
+
+  const { data: registro, error: errGet } = await supabaseClient
+    .from('registros').select('denuncias').eq('id', id).single();
+
+  if (errGet) { alert('Erro ao buscar registro.'); return; }
+
+  const atual = Array.isArray(registro.denuncias) ? registro.denuncias : [];
+  if (atual.includes(meuToken)) return;
+
+  const novos = [...atual, meuToken];
+
+  const { error: errUpd } = await supabaseClient
+    .from('registros').update({ denuncias: novos }).eq('id', id);
+
+  if (errUpd) { alert('Erro ao registrar denúncia.'); return; }
+
+  // Atualiza estado local e UI
+  const d = item.marker._registroData;
+  d.denuncias = novos.length;
+  d.denunciasTokens = novos;
+  d.denunciado = true;
+  item.denunciado = true;
+
+  const cor = catColors[d.categoria] || '#999';
+  item.marker.setIcon(makeIcon(cor, adminLogado && d.denunciado));
+  item.marker.setPopupContent(montarPopup(d));
+  item.marker.closePopup();
+  item.marker.openPopup();
+};
+
+// ============================================================
+// 16. CARREGAR PONTOS DO SUPABASE
 // ============================================================
 async function carregarRegistros() {
   const { data, error } = await supabaseClient
-    .from('registros')
-    .select('*')
-    .order('criado_em', { ascending: true });
+    .from('registros').select('*').order('criado_em', { ascending: true });
 
-  if (error) {
-    console.error('Erro ao carregar registros:', error.message);
-    return;
-  }
+  if (error) { console.error('Erro ao carregar registros:', error.message); return; }
 
-  data.forEach(registro => adicionarMarcador(registro));
+  data.forEach(r => {
+    const tokens = Array.isArray(r.denuncias) ? r.denuncias : [];
+    adicionarMarcador({ ...r, denuncias: tokens, denunciasTokens: tokens });
+  });
 }
 
 // ============================================================
-// 15. CLICAR NO MAPA → ABRIR MODAL
+// 17. CLICAR NO MAPA → ABRIR MODAL
 // ============================================================
 map.on('click', function(e) {
   pendingLatLng = e.latlng;
@@ -324,7 +416,7 @@ document.getElementById('btn-cancel').onclick = () =>
   document.getElementById('modal').classList.remove('open');
 
 // ============================================================
-// 16. SALVAR NOVO PONTO
+// 18. SALVAR NOVO PONTO
 // ============================================================
 document.getElementById('btn-save').onclick = async function() {
   const cat  = document.getElementById('cat-select').value;
@@ -335,11 +427,9 @@ document.getElementById('btn-save').onclick = async function() {
   this.textContent = 'Salvando...';
 
   const novoRegistro = {
-    lat:         pendingLatLng.lat,
-    lng:         pendingLatLng.lng,
-    categoria:   cat,
-    descricao:   desc || null,
-    autor_token: meuToken
+    lat: pendingLatLng.lat, lng: pendingLatLng.lng,
+    categoria: cat, descricao: desc || null,
+    autor_token: meuToken, denuncias: []
   };
 
   if (cat === 'alagamento') {
@@ -349,25 +439,19 @@ document.getElementById('btn-save').onclick = async function() {
   }
 
   const { data, error } = await supabaseClient
-    .from('registros')
-    .insert(novoRegistro)
-    .select()
-    .single();
+    .from('registros').insert(novoRegistro).select().single();
 
   this.disabled = false;
   this.textContent = 'Salvar';
 
-  if (error) {
-    alert('Erro ao salvar: ' + error.message);
-    return;
-  }
+  if (error) { alert('Erro ao salvar: ' + error.message); return; }
 
-  adicionarMarcador(data);
+  adicionarMarcador({ ...data, denuncias: [], denunciasTokens: [] });
   document.getElementById('modal').classList.remove('open');
 };
 
 // ============================================================
-// 17. FILTROS
+// 19. FILTROS
 // ============================================================
 document.querySelectorAll('.cat-btn').forEach(btn => {
   btn.addEventListener('click', function() {
@@ -382,15 +466,17 @@ document.querySelectorAll('.cat-btn').forEach(btn => {
     this.style.background = filtroAtivo === 'todos' ? '#1D9E75' : catColors[filtroAtivo];
     this.style.color = 'white';
 
+    clusterGroup.clearLayers();
     markers.forEach(m => {
-      if (filtroAtivo === 'todos' || m.cat === filtroAtivo) m.marker.addTo(map);
-      else map.removeLayer(m.marker);
+      if (filtroAtivo === 'todos' || m.cat === filtroAtivo) {
+        clusterGroup.addLayer(m.marker);
+      }
     });
   });
 });
 
 // ============================================================
-// 18. ADMIN — ABRIR MODAL DE LOGIN
+// 20. ADMIN — ABRIR MODAL DE LOGIN
 // ============================================================
 document.getElementById('btn-admin-login').addEventListener('click', () => {
   document.getElementById('admin-erro').style.display = 'none';
@@ -399,12 +485,11 @@ document.getElementById('btn-admin-login').addEventListener('click', () => {
   document.getElementById('modal-admin').classList.add('open');
 });
 
-document.getElementById('btn-admin-cancel').addEventListener('click', () => {
-  document.getElementById('modal-admin').classList.remove('open');
-});
+document.getElementById('btn-admin-cancel').addEventListener('click', () =>
+  document.getElementById('modal-admin').classList.remove('open'));
 
 // ============================================================
-// 19. ADMIN — LOGIN
+// 21. ADMIN — LOGIN
 // ============================================================
 document.getElementById('btn-admin-entrar').addEventListener('click', async function() {
   const email = document.getElementById('admin-email').value.trim();
@@ -417,13 +502,11 @@ document.getElementById('btn-admin-entrar').addEventListener('click', async func
     return;
   }
 
-  this.disabled = true;
-  this.textContent = 'Entrando...';
+  this.disabled = true; this.textContent = 'Entrando...';
 
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: senha });
 
-  this.disabled = false;
-  this.textContent = 'Entrar';
+  this.disabled = false; this.textContent = 'Entrar';
 
   if (error) {
     erroEl.textContent = 'Email ou senha incorretos.';
@@ -440,7 +523,7 @@ document.getElementById('btn-admin-entrar').addEventListener('click', async func
 });
 
 // ============================================================
-// 20. ADMIN — LOGOUT
+// 22. ADMIN — LOGOUT
 // ============================================================
 document.getElementById('btn-logout').addEventListener('click', async () => {
   await supabaseClient.auth.signOut();
@@ -451,7 +534,7 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
 });
 
 // ============================================================
-// 21. VERIFICAR SESSÃO SALVA
+// 23. VERIFICAR SESSÃO SALVA
 // ============================================================
 supabaseClient.auth.getSession().then(({ data }) => {
   if (data.session) {
@@ -463,6 +546,6 @@ supabaseClient.auth.getSession().then(({ data }) => {
 });
 
 // ============================================================
-// 22. INICIAR
+// 24. INICIAR
 // ============================================================
 carregarRegistros();

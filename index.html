@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Urbano Comum — Mapeamento Comunitário</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 </head>
@@ -52,6 +54,7 @@
   <button class="cat-btn" data-cat="lixo">Lixo</button>
   <button class="cat-btn" data-cat="sinalizacao">Sinalização</button>
   <button class="cat-btn" data-cat="meio_ambiente">Meio Ambiente</button>
+  <button class="cat-btn" data-cat="imovel_abandonado">Imóvel Abandonado</button>
 </div>
 
 <!-- HINT DE INSTRUÇÃO (aparece depois das boas-vindas) -->
@@ -75,7 +78,7 @@
     <button class="btn-fechar-sobre" id="btn-fechar-sobre">×</button>
     <h2>Bem-vindo(a) ao <span style="color:#1D9E75;font-family:'Bebas Neue',sans-serif;letter-spacing:2px;">URBANO COMUM</span>!</h2>
     <p>O projeto surge para dar voz às experiências cotidianas, transformando relatos individuais em dados coletivos. É a nossa ferramenta para identificar problemas compartilhados e buscar melhorias que beneficiem a todos, fortalecendo o cuidado com o espaço que chamamos de casa.</p>
-    <p>Este espaço é parte de uma pesquisa de Mestrado da UTFPR (Campus Pato Branco) do programa de Pós-graduação em Desenvolvimento Regional. Nosso objetivo é criar um canal intuitivo onde você pode sinalizar problemas urbanos e compartilhar sua vivência na cidade.</p>
+    <p>Este espaço é parte de uma pesquisa de Mestrado da UTFPR (Campus Pato Branco) do programa de Pós-graduação em Desenvolvimento Regional, por uma bolsista da Fundação Araucária. Nosso objetivo é criar um canal intuitivo onde você pode sinalizar problemas urbanos e compartilhar sua vivência na cidade.</p>
     <p><strong>Por que participar?</strong> Sua colaboração é totalmente anônima e fundamental para transformarmos dados em mobilização por melhorias. Mesmo que um problema já tenha sido marcado por outra pessoa, registre o seu relato! Quanto mais indicações um local recebe, maior se torna a evidência da urgência daquele problema.</p>
     <p>Agradecemos imensamente sua contribuição. Sem você, esta pesquisa não seria possível!</p>
     <div class="sobre-footer">
@@ -103,6 +106,7 @@
       <option value="lixo">Lixo</option>
       <option value="sinalizacao">Sinalização</option>
       <option value="meio_ambiente">Meio Ambiente</option>
+      <option value="imovel_abandonado">Imóvel Abandonado</option>
     </select>
 
     <div id="alagamento-fields" style="display:none;">
@@ -169,6 +173,7 @@
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
 
