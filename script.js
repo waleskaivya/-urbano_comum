@@ -23,15 +23,15 @@ let adminLogado = false;
 // 4. CORES E LABELS  (nova categoria: imovel_abandonado)
 // ============================================================
 const catColors = {
-  alagamento:        '#4b23ff',
-  pavimentacao:      '#5e5e5e',
-  calcada:           '#acacac',
-  iluminacao:        '#fffc57',
-  acessibilidade:    '#00c3ff',
-  lixo:              '#3B6D11',
-  sinalizacao:       '#ff9100',
-  meio_ambiente:     '#00db63',
-  imovel_abandonado: '#8B2FC9'
+  alagamento:        '#F47700',
+  pavimentacao:      '#F2B513',
+  calcada:           '#13BFF2',
+  iluminacao:        '#625DB4',
+  acessibilidade:    '#AC1149',
+  lixo:              '#93CC16',
+  sinalizacao:       '#41889D',
+  meio_ambiente:     '#D51EDC',
+  imovel_abandonado: '#437363'
 };
 
 const catLabels = {
