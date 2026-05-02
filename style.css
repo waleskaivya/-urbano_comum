@@ -259,19 +259,29 @@ footer {
   align-items: center; 
   justify-content: center;
 }
-.modal-bg.open { display: flex; }
+.modal-bg.open { 
+  display: flex;
+ }
 
 .modal {
-  background: rgba(255, 255, 255, 0.95); 
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+
+
+
   border-radius: 12px;
   padding: 25px;
   width: 340px;
   max-width: 92vw;
   max-height: 85vh;
   overflow-y: auto;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+  
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: saturate(180%) blur(2px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
 }
 
 /* --- MODAL SOBRE O PROJETO --- */
@@ -280,7 +290,17 @@ footer {
   max-width: 92vw;
   position: relative;
   padding: 35px 30px 24px;
+
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: saturate(180%) blur(2px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
 }
+
 
 .modal-sobre-conteudo h2 {
   font-size: 18px;
@@ -398,6 +418,61 @@ footer {
     font-size: 10px;
   }
 
-  header { padding: 6px 12px; }
+  header {
+    padding: 6px 10px;
+    gap: 6px;
+    overflow: visible;
+    min-width: 0;
+  }
+
+  /* Título encolhe se necessário mas não some */
+  #titulo-urbano-comum {
+    font-size: 17px;
+    letter-spacing: 1.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex-shrink: 1;
+  }
+
+  /* Esconde o subtítulo "Mapeamento Comunitário · Pato Branco, PR" em telas pequenas */
+  .header-info {
+    display: none;
+  }
+
+  /* Garante que a área admin nunca transborde */
+  #admin-area {
+    flex-shrink: 0;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  /* Status do admin (email + sair) em linha sem cortar */
+  #admin-status {
+    display: flex !important;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: nowrap;
+  }
+
+  /* Email do admin: esconde em telas muito pequenas para não empurrar o "Sair" */
+  #admin-email-label {
+    display: none;
+  }
+
+  /* Botão Sair sempre visível */
+  #btn-logout {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  /* Engrenagem sempre visível */
+  #btn-admin-login {
+    flex-shrink: 0;
+  }
+
   .toolbar { padding: 6px 12px; gap: 5px; }
 }
