@@ -119,9 +119,7 @@ header span { font-size: 11px; color: #888; }
 }
 
 #admin-email-label {
-  font-size: 11px;
-  color: #1D9E75;
-  font-weight: 600;
+  display: none;
 }
 
 #btn-logout {
@@ -259,14 +257,9 @@ footer {
   align-items: center; 
   justify-content: center;
 }
-.modal-bg.open { 
-  display: flex;
- }
+.modal-bg.open { display: flex; }
 
 .modal {
-
-
-
   border-radius: 12px;
   padding: 25px;
   width: 340px;
@@ -283,6 +276,8 @@ footer {
     0 8px 32px rgba(0, 0, 0, 0.12),
     0 1px 0 rgba(255, 255, 255, 0.9) inset;
 }
+
+
 
 /* --- MODAL SOBRE O PROJETO --- */
 .modal-sobre-conteudo {
@@ -425,7 +420,6 @@ footer {
     min-width: 0;
   }
 
-  /* Título encolhe se necessário mas não some */
   #titulo-urbano-comum {
     font-size: 17px;
     letter-spacing: 1.5px;
@@ -436,42 +430,21 @@ footer {
     flex-shrink: 1;
   }
 
-  /* Esconde o subtítulo "Mapeamento Comunitário · Pato Branco, PR" em telas pequenas */
-  .header-info {
-    display: none;
-  }
+  .header-info { display: none; }
 
-  /* Garante que a área admin nunca transborde */
   #admin-area {
     flex-shrink: 0;
     gap: 6px;
     min-width: 0;
   }
 
-  /* Status do admin (email + sair) em linha sem cortar */
-  #admin-status {
-    display: flex !important;
-    align-items: center;
-    gap: 5px;
-    flex-wrap: nowrap;
-  }
+  #btn-admin-login { flex-shrink: 0; }
 
-  /* Email do admin: esconde em telas muito pequenas para não empurrar o "Sair" */
-  #admin-email-label {
-    display: none;
-  }
-
-  /* Botão Sair sempre visível */
   #btn-logout {
     white-space: nowrap;
     flex-shrink: 0;
     padding: 3px 8px;
     font-size: 11px;
-  }
-
-  /* Engrenagem sempre visível */
-  #btn-admin-login {
-    flex-shrink: 0;
   }
 
   .toolbar { padding: 6px 12px; gap: 5px; }
